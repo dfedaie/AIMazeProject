@@ -14,6 +14,8 @@ class Point:
     def __getitem__(self,arg):
         point=([self.xValue,self.yValue])
         return (point[arg])
+    def __repr__(self):
+        return str((str(self.xValue),str(self.yValue)))
     def __str__(self):
         return str((str(self.xValue),str(self.yValue)))
     def getCoord(self):
@@ -43,11 +45,12 @@ def heuristic(a, b):
     (x2, y2) = b
     return abs(x1 - x2) + abs(y1 - y2)
 def neighbors(graph,current):
-    rList=[]
+    rList=[] 
     for x in range (current[0]-1,current[0]+2):
         for y in range (current[1]-1,current[1]+2):
             if (graph[x,y]==0) and (x>0 and y>0):
-                    rList.append(Point(x,y))
+                add= Point(x,y)
+                rList.append(add.getCoord())
     return rList
 def aStarActor(graph, start, goal):
     frontier = PriorityQueue()
@@ -56,10 +59,8 @@ def aStarActor(graph, start, goal):
     cost_so_far = {}
     came_from[start] = None
     cost_so_far[start] = 0
-    
-    while not frontier.empty():
+    while (not frontier.empty()):
         current = frontier.get()
-        print(current)
         if current == goal:
             break
         for next in neighbors(graph,current):
@@ -69,10 +70,9 @@ def aStarActor(graph, start, goal):
                 priority = new_cost + heuristic(goal, next)
                 frontier.put(next, priority)
                 came_from[next] = current
-    
     return came_from, cost_so_far
 # 7 0 1    
-# 6   2
+# 6   2 the direction square!
 # 5 4 3
 def go(direction,point):
     if (direction == 7) or (direction == 0) or (direction == 1): #if we move up
@@ -173,10 +173,16 @@ for x in range (3):
 for x in range (47, 49):
     for y in range (47,49):
             maze[x,y]= 0
-wallHugger(maze)
+#wallHugger(maze)
+#==============================================================================
+placesbeen, secondary = aStarActor(maze, (0,0), (48,48))
+#==============================================================================
+xx=(48,48)
+y=[(48,48)]
+while not(xx==(0,0)):
+    print placesbeen[xx]
+    xx=placesbeen[xx]
+    maze[xx[0],xx[1]]=3
 img = pyplot.imshow(maze,interpolation='nearest')
-#==============================================================================
-# aStarActor(maze, (0,0), (49,49))
-#==============================================================================
 pyplot.show()
 
